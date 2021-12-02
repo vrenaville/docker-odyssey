@@ -1,7 +1,6 @@
 FROM debian:bullseye as builder
 
 WORKDIR /tmp/
-
 RUN set -ex \
     && apt-get update \
     && apt-get upgrade -y \
