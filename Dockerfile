@@ -10,8 +10,9 @@ RUN set -ex \
         git \
         libpqxx-dev \
         postgresql-server-dev-all \
+        ca-certificates \
         libssl-dev \
-    && git clone --depth 1 --branch 1.2 git://github.com/yandex/odyssey.git \
+    && git clone --depth 1 --branch 1.3 http://github.com/yandex/odyssey.git \
     && cd odyssey \
     && mkdir build \
     && cd build \
@@ -36,5 +37,7 @@ RUN set -ex \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /tmp/odyssey/build/sources/odyssey /usr/local/bin/
+RUN adduser --disabled-password --gecos '' odyssey
+USER odyssey
 ENTRYPOINT ["/usr/local/bin/odyssey"]
 EXPOSE 5432

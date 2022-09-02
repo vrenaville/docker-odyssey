@@ -4,9 +4,15 @@ name: Build Odyssey image
 on:
   schedule:
     - cron: "2 2 * * SUN"
+  pull_request:
+    branches:
+      - "master"
   push:
     branches:
-    - master
+      - '*'
+    tags:
+      - "*.*.*"
+      - "stable"
 
 jobs:
   build:
@@ -15,13 +21,28 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: ghcr.io/camptocamp/odyssey
+        flavor: latest=true
+        tags: |
+            type=schedule,value=nightly
+            type=raw,value=latest
+            type=ref,event=tag
+
     - uses: camptocamp/initialise-gopass-summon-action@v2
       with:
         ci-gpg-private-key: ${{secrets.CI_GPG_PRIVATE_KEY}}
         github-gopass-ci-token: ${{secrets.GOPASS_CI_GITHUB_TOKEN}}
         patterns: docker
 
-    - name: "Build and Push images"
-      run: |
-        docker build -t ghcr.io/camptocamp/odyssey:latest .
-        docker push ghcr.io/camptocamp/odyssey:latest
+
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        file: Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
