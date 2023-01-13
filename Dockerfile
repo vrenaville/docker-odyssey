@@ -12,6 +12,7 @@ RUN set -ex \
     libpqxx-dev \
     postgresql-server-dev-all \
     libssl-dev \
+    ca-certificates \
     && git clone --depth 1 --branch 1.2 http://github.com/yandex/odyssey.git \
     && cd odyssey \
     && mkdir build \
