@@ -22,6 +22,8 @@ latest (unreleased)
 
 **Features and Improvements**
 
+* feat: add prometheus logs
+
 **Bugfixes**
 
 **Build**
