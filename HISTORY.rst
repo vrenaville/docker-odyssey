@@ -22,11 +22,15 @@ latest (unreleased)
 
 **Features and Improvements**
 
-* feat: add prometheus logs
 
 **Bugfixes**
 
 **Build**
+
+1.4.0 (23-03-2023)
++++++++++++++++++++
+
+* feat: add prometheus logs
 
 1.3.0 (30-01-2023)
 +++++++++++++++++++
