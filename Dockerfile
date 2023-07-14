@@ -1,4 +1,4 @@
-FROM debian:bullseye as builder
+FROM debian:bookworm as builder
 
 
 WORKDIR /tmp/
@@ -34,8 +34,8 @@ RUN set -ex \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-FROM debian:bullseye
-
+FROM debian:bookworm-slim
+ENV CERTFILE='/tmp/tls-cert/tls.crt'
 RUN set -ex \
     && apt-get update \
     && apt-get upgrade -y \
@@ -44,13 +44,16 @@ RUN set -ex \
     curl \
     libmicrohttpd-dev \
     && curl -L https://github.com/digitalocean/prometheus-client-c/releases/download/v0.1.3/libprom-dev-0.1.3-Linux.deb -o /tmp/libprom-dev-0.1.3-Linux.deb \
-    && curl -L https://github.com/digitalocean/prometheus-client-c/releases/download/v0.1.3/libpromhttp-dev-0.1.3-Linux.deb -o /tmp/libpromhttp-dev-0.1.3-Linux.dev \
+    && curl -L https://github.com/digitalocean/prometheus-client-c/releases/download/v0.1.3/libpromhttp-dev-0.1.3-Linux.deb -o /tmp/libpromhttp-dev-0.1.3-Linux.deb \
     && dpkg --install /tmp/libprom-dev-0.1.3-Linux.deb \
-    && dpkg --install /tmp/libpromhttp-dev-0.1.3-Linux.dev \
+    && dpkg --install /tmp/libpromhttp-dev-0.1.3-Linux.deb \
+    && rm /tmp/libpromhttp-dev-0.1.3-Linux.deb \
+    && rm /tmp/libprom-dev-0.1.3-Linux.deb \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /tmp/odyssey/build/sources/odyssey /usr/local/bin/
+COPY ./entrypoint.sh .
 RUN adduser --disabled-password --gecos '' odyssey
 USER odyssey
-ENTRYPOINT ["/usr/local/bin/odyssey"]
+ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 5432
