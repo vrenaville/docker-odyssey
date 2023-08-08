@@ -27,6 +27,14 @@ latest (unreleased)
 
 **Build**
 
+1.5.0 (08-08-2023)
++++++++++++++++++++
+
+* fix: Add Certificate end date storing, for external tests
+* feat: switch from debian bulleye -> debian bookworm
+* fix: remove deb file in /tmp
+* feat: include sample odyssey config file 
+
 1.4.0 (23-03-2023)
 +++++++++++++++++++
 
